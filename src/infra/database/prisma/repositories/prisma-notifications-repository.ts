@@ -6,6 +6,7 @@ import {
 } from '@/application/repositories/notifications-repository';
 
 import { PrismaService } from '../prisma.service';
+import { PrismaNotificationMapper } from '../mappers/prisma-notification-mapper';
 
 @Injectable()
 export class PrismaNotificationsRepository extends NotificationsRepository {
@@ -14,15 +15,27 @@ export class PrismaNotificationsRepository extends NotificationsRepository {
   }
 
   async create(notification: Notification): Promise<void> {
-    await this.prisma.notification.create({
-      data: {
-        id: notification.id,
-        recipientId: notification.recipientId,
-        category: notification.category,
-        content: notification.content.value,
-        readAt: notification.readAt,
-        createdAt: notification.createdAt,
-      },
+    const data = PrismaNotificationMapper.toPrisma(notification);
+    await this.prisma.notification.create({ data });
+  }
+
+  async findById(id: string): Promise<Notification | null> {
+    const notification = await this.prisma.notification.findUnique({
+      where: { id },
+    });
+
+    if (!notification) {
+      return null;
+    }
+
+    throw new Error('Method not implemented.');
+  }
+
+  async save(notification: Notification): Promise<void> {
+    const data = PrismaNotificationMapper.toPrisma(notification);
+    await this.prisma.notification.update({
+      where: { id: notification.id },
+      data,
     });
   }
 }

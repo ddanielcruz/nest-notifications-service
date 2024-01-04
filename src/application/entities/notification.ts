@@ -4,11 +4,12 @@ import type { Optional } from '@/helpers/optional';
 
 import { Content } from './content';
 
-interface NotificationProps {
+export interface NotificationProps {
   recipientId: string;
   content: Content;
   category: string;
   readAt?: Date | null;
+  canceledAt?: Date | null;
   createdAt: Date;
 }
 
@@ -33,6 +34,10 @@ export class Notification {
     return this.props.readAt || null;
   }
 
+  get canceledAt(): Date | null {
+    return this.props.canceledAt || null;
+  }
+
   get createdAt(): Date {
     return this.props.createdAt;
   }
@@ -43,5 +48,23 @@ export class Notification {
       ...props,
       createdAt: props.createdAt || new Date(),
     };
+  }
+
+  public cancel(): void {
+    if (!this.props.canceledAt) {
+      this.props.canceledAt = new Date();
+    }
+  }
+
+  public read(): void {
+    if (!this.props.readAt) {
+      this.props.readAt = new Date();
+    }
+  }
+
+  public unread(): void {
+    if (this.props.readAt) {
+      this.props.readAt = null;
+    }
   }
 }
