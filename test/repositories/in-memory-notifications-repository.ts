@@ -1,7 +1,7 @@
 import {
   NotificationsRepository,
   Notification,
-} from '../../src/application/repositories/notifications-repository';
+} from '@/application/repositories/notifications-repository';
 
 export class InMemoryNotificationsRepository extends NotificationsRepository {
   public items: Notification[] = [];
